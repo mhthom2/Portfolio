@@ -1,0 +1,315 @@
+---
+title: "Exploratory Analysis of Fine Particulate Pollutants"
+author: "Matthew Thomas"
+date: "`r Sys.Date()`"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+
+# source data: https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip 
+```
+
+```{r}
+suppressMessages({
+        suppressWarnings(
+        {
+                library(dplyr)    # Easier manipulation of data frames 
+                library(ggplot2)  # Specialized plotting 
+        })
+})
+```
+
+```{r}
+# Load data
+NEI <- readRDS('summarySCC_PM25.rds')
+SCC <- readRDS('Source_Classification_Code.rds')
+
+# Merge data frames together
+NEI_SCC <- merge(NEI, SCC, by = 'SCC')
+
+# Filter for coal data  
+NEI_SCC_coal <- NEI_SCC[grep(pattern='Coal', x=NEI_SCC$EI.Sector), ]
+
+# Mask for Baltimore and LA 
+NEI_SCC_Balt <- subset(NEI_SCC, fips == '24510')
+NEI_SCC_LA <- subset(NEI_SCC, fips == '06037')
+
+# Filter for motor vehicle data  
+NEI_SCC_Balt_Vehicles <- NEI_SCC_Balt[grep(pattern='Vehicle', x=NEI_SCC_Balt$EI.Sector), ]
+NEI_SCC_LA_Vehicles <- NEI_SCC_LA[grep(pattern='Vehicle', x=NEI_SCC_LA$EI.Sector), ]
+
+# Clean up memory
+rm('SCC', 'NEI_SCC')
+```
+
+## Fine Particulate Matter (PM2.5) Emissions
+
+PM2.5 is an ambient air pollutant for which there is strong evidence that it's harmful to human health. In the United States, the Environmental Protection Agency (EPA) is tasked with tracking the emissions of this pollutant into the atmosphere. Approximately every 3 years, the EPA releases its database on emissions of PM2.5. This database is known as the National Emissions Inventory (NEI). 
+
+For each year and for each type of particulate matter source, the NEI records how many tons of PM2.5 were emitted from that source over the course of the entire year. This data set 
+contains emission data for the years 1999, 2002, 2005, and 2008. For this project, we 
+analyzed emission data for the US, Baltimore, MD, and Los Angeles (LA), California. 
+
+## PM2.5 Emissions in US
+
+```{r, fig.height=4, fig.width=6}
+# Calculate total emissions for each year 
+totals <- NEI %>% 
+        group_by(year) %>% 
+        summarize(Total_Emissions=sum(Emissions))
+
+# Divide by one million to simplify y scale 
+totals$Total_Emissions <- totals$Total_Emissions / 1000000
+
+# Make plot 
+plot(totals$year, totals$Total_Emissions, xlab='Year', 
+     ylab='Emissions (millions of particulates)', type = 'l', 
+     xlim=c(1998, 2009), ylim=c(0, 8), 
+     main='Total PM2.5 Emissions for 1999, 2002, 2005, 2008', 
+     xaxt='n', bty = 'l', col='violet', lwd=2.0)
+
+# Adjust x axis tick labels 
+axis(1, at=c(1999, 2002, 2005, 2008))
+
+# Adjust y axis tick labels 
+axis(2, at=seq(0 , 8))
+
+# Add lines at 7, 5 and 3 for clarity
+abline(h = 7, lty = 2, col='gray')
+abline(h = 5, lty = 2, col='gray')
+abline(h = 3, lty = 2, col='gray')
+
+```
+
+Overall, total PM2.5 emissions decreased between 1999 and 2008, but it wasn't 
+a steady drop. Emissions leveled off and even increased slightly between 2002 and 
+2005. 
+
+## PM2.5 Emissions in Baltimore
+
+```{r, fig.height=3.5, fig.width=6}
+# Mask for just Baltimore
+NEI_Baltimore <- subset(NEI, fips == '24510')
+
+# Calculate total emissions for each year 
+totals <- NEI_Baltimore %>% 
+          group_by(year) %>% 
+          summarize(Total_Emissions=sum(Emissions))
+
+# Divide by one thousand to simplify y scale 
+totals$Total_Emissions <- totals$Total_Emissions / 1000
+
+# Make plot 
+plot(totals$year, totals$Total_Emissions, xlab='Year', 
+     ylab='Emissions (thousands of particulates)', type = 'l', 
+     xlim=c(1998, 2009), ylim=c(0, 4), 
+     main='Total Baltimore Emissions for 1999, 2002, 2005, 2008', 
+     xaxt='n', bty = 'l', col='purple', lwd=2.0)
+
+# Adjust x axis tick labels 
+axis(1, at=c(1999, 2002, 2005, 2008))
+
+# Add lines at 3, 2 and 1 for clarity
+abline(h = 3, lty = 2, col='gray')
+abline(h = 2, lty = 2, col='gray')
+abline(h = 1, lty = 2, col='gray')
+
+```
+
+Total PM2.5 emissions also decreased in Baltimore between 1999 and 2008, but 
+there was a dramatic increase between 2002 and 2005. 
+
+## Sources of Emissions in Baltimore 
+
+```{r, fig.height=4, fig.width=7}
+
+# Rename `type` column
+NEI_Baltimore <- NEI_Baltimore %>% rename_at('type', ~ 'Type')
+
+# Calculate total emissions for each year, type
+totals <- NEI_Baltimore %>% 
+          group_by(year, Type) %>% 
+          summarize(Total_Emissions=sum(Emissions), .groups='keep')
+
+# Divide by one thousand to simplify y scale 
+totals$Total_Emissions <- totals$Total_Emissions / 1000
+
+# Make plot using ggplot
+p <- totals %>% ggplot(aes(x=year, y=Total_Emissions, group=Type, color=Type)) + 
+           geom_line(linewidth=1.5) + xlab('Year') + 
+           ylab('Emissions (thousands of particulates)') + 
+           ggtitle('Source of Baltimore Emissions for 1999, 2002, 2005, 2008') +
+           scale_fill_discrete(name='Type')
+
+print(p)
+
+```
+
+Although `nonpoint` sources of emissions have decreased in Baltimore, it was still
+the largest source of PM2.5 particulates between 1999 and 2008. 
+
+## Emissions from Coal Combustion 
+
+```{r, fig.height=4, fig.width=6}
+# Select needed columns
+NEI_SCC_coal <- NEI_SCC_coal[c('fips', 'year', 'Emissions')]
+
+# Data to plot
+totals <- NEI_SCC_coal %>% group_by(year) %>% summarize(Total_Emissions=sum(Emissions))
+totals <- totals[complete.cases(totals), ]
+
+# Divide by one million to simplify y scale 
+totals$Total_Emissions <- totals$Total_Emissions / 1000000
+
+# Make plot 
+plot(totals$year, totals$Total_Emissions, xlab='Year', 
+     ylab='Coal Emissions (millions of particulates)', type = 'l', 
+     xlim=c(1998, 2009), ylim=c(0, 0.7), 
+     main='Total Coal Combustion Emissions', 
+     xaxt='n', bty = 'l', col='violet', lwd=2.0)
+
+# Adjust x axis tick labels 
+axis(1, at=c(1999, 2002, 2005, 2008))
+
+# Add lines for clarity
+abline(h = 0.6, lty = 2, col='gray')
+abline(h = 0.5, lty = 2, col='gray')
+abline(h = 0.4, lty = 2, col='gray')
+abline(h = 0.3, lty = 2, col='gray')
+```
+
+Between 1999 and 2005, emissions from coal combustion remained steady, but after
+2005 there was a significant drop in emissions. 
+
+## Motor Vehicle Emissions in Baltimore
+
+```{r, fig.height=4, fig.width=7}
+# Select needed columns
+NEI_SCC_Balt_Vehicles <- NEI_SCC_Balt_Vehicles[c('fips', 'year', 'Emissions')]
+
+# Data to plot
+totals <- NEI_SCC_Balt_Vehicles %>% 
+          group_by(year) %>% 
+          summarize(Total_Emissions=sum(Emissions))
+
+# Remove entries with missing values 
+totals <- totals[complete.cases(totals), ]
+
+# Divide by one hundred to simplify y scale 
+totals$Total_Emissions <- totals$Total_Emissions / 100
+
+# Make plot 
+plot(totals$year, totals$Total_Emissions, xlab='Year', 
+     ylab='Motor Vehicle Emissions (hundreds of particulates)', type = 'l', 
+     xlim=c(1998, 2009), ylim=c(0, 3.5), 
+     main='Total Motor Vehicle Combustion Emissions for Baltimore, MD', 
+     xaxt='n', bty = 'l', col='blue', lwd=2.0)
+
+# Adjust x axis tick labels 
+axis(1, at=c(1999, 2002, 2005, 2008))
+
+# Add lines for clarity
+abline(h = 1.5, lty = 2, col='gray')
+abline(h = 1.0, lty = 2, col='gray')
+abline(h = 0.5, lty = 2, col='gray')
+
+```
+
+Motor vehicle emissions in Baltimore decreased significantly between 1999 and 
+2005, but the drop after 2005 was much less. 
+
+## Motor Vehicle Emissions in Baltimore and LA 
+
+```{r, fig.height=5, fig.width=7}
+# Select needed columns
+NEI_SCC_Balt_Vehicles <- NEI_SCC_Balt_Vehicles[c('fips', 'year', 'Emissions')]
+NEI_SCC_LA_Vehicles <- NEI_SCC_LA_Vehicles[c('fips', 'year', 'Emissions')]
+
+# Baltimore data to plot
+Balt_totals <- NEI_SCC_Balt_Vehicles %>% 
+               group_by(year) %>% 
+               summarize(Total_Emissions=sum(Emissions))
+
+# Remove missing values 
+Balt_totals <- Balt_totals[complete.cases(Balt_totals), ]
+
+# LA data to plot 
+LA_totals <- NEI_SCC_LA_Vehicles %>% 
+             group_by(year) %>% 
+             summarize(Total_Emissions=sum(Emissions))
+# Remove missing values 
+LA_totals <- LA_totals[complete.cases(LA_totals), ]
+
+# Divide by one hundred to simplify y scale 
+Balt_totals$Total_Emissions <- Balt_totals$Total_Emissions / 100
+LA_totals$Total_Emissions <- LA_totals$Total_Emissions / 100
+
+# Make Baltimore plot 
+plot(Balt_totals$year, Balt_totals$Total_Emissions, xlab='Year', 
+     ylab='Motor Vehicle Emissions (hundreds of particulates)', type = 'l', 
+     xlim=c(1998, 2009), ylim=c(0, 50), 
+     main='Total Motor Vehicle Combustion Emissions \nfor Baltimore and LA in 1999, 2002, 2005 and 2008', 
+     xaxt='n', bty = 'l', col='blue', lwd=2.0)
+
+# Plot LA plot
+lines(LA_totals$year, LA_totals$Total_Emissions, col='green', lwd=2.0)
+
+# Adjust x axis tick labels 
+axis(1, at=c(1999, 2002, 2005, 2008))
+
+# Add lines for clarity
+abline(h = 0, lty = 2, col='gray')
+abline(h = 5, lty = 2, col='gray')
+abline(h = 40, lty = 2, col='gray')
+abline(h = 45, lty = 2, col='gray')
+abline(h = 50, lty = 2, col='gray')
+
+# Calculate change in emissions 
+old_LA_total <- LA_totals$Total_Emissions[1]
+new_LA_total <- LA_totals$Total_Emissions[4]
+LA_diff <-  new_LA_total - old_LA_total
+LA_percent_change <- round((LA_diff / old_LA_total) * 100, 2)
+
+old_Balt_total <- Balt_totals$Total_Emissions[1]
+new_Balt_total <- Balt_totals$Total_Emissions[4]
+Balt_diff <-  new_Balt_total - old_Balt_total
+Balt_percent_change <- abs(round((Balt_diff / old_Balt_total) * 100, 2))
+
+
+# Plot annotations
+
+# Create text 
+LA_label <- paste0('LA emissions increased by ',
+                     LA_percent_change, '%')
+Balt_label <- paste0('Baltimore emissions decreased by ',
+                     Balt_percent_change, '%')
+
+# Add text to plot 
+text(x=LA_totals$year[3], y=35, 
+     labels=LA_label)
+text(x=Balt_totals$year[2], y=15, 
+     labels=Balt_label)
+
+# Add arrows to plots 
+arrows(x0 = LA_totals$year[3], y0 = 37, 
+       x1 = LA_totals$year[1], y1 = 37)
+arrows(x0 = LA_totals$year[3], y0 = 37, 
+       x1 = LA_totals$year[4], y1 = 39)
+
+arrows(x0 = Balt_totals$year[2], y0 = 12, 
+       x1 = Balt_totals$year[1], y1 = 7)
+arrows(x0 = Balt_totals$year[2], y0 = 12, 
+       x1 = Balt_totals$year[4], y1 = 4)
+
+legend(x = 'right',
+       inset = c(-0.01, 0), legend = c('LA', 'Baltimore'), 
+       lty = c(1, 1), col = c(3, 4), lwd = 2, xpd = TRUE)
+```
+
+## Source of Data Set 
+
+The data for this project can be found at this link: 
+
+<font size='5'>https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip</font>
