@@ -1,4 +1,4 @@
 This project displays the locations of the major battles of the US Civil War (1861-65). The flag icons indicate which army was the victor for that battle, 
-and the embedded links connect to Wikipedia web sites about the battle.
+and the embedded links connect to Wikipedia web sites about the battles.
 
 The interactive HTML page was created using R markdown using the 'dplyr' and 'Leaflet' packages.
