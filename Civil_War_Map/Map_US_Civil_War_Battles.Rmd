@@ -1,0 +1,171 @@
+---
+title: "Major Battles of US Civil War"
+author: "Matthew Thomas"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE)
+
+# https://rpubs.com/mhthom2/leaflet_example
+```
+
+## Key Conclusive Battles of the U.S. Civil War (1861-1865)
+
+```{r, warning=FALSE, echo=FALSE}
+suppressMessages({
+        suppressWarnings(
+        {
+                library(dplyr)
+                library(leaflet)
+                library(leaflegend)
+        })
+})
+```
+
+```{r, warning=FALSE}
+# Flag icon for conferate victories 
+confIcon <- makeIcon(iconUrl= 'https://images.vector-images.com/119/confederate1865_fl_n8813.gif', 
+                      iconWidth= 15, iconHeight=20
+)
+# Flag icon for union victories 
+unionIcon <- makeIcon(iconUrl= 'https://www.mrflag.com/wp-content/uploads/2018/10/USA-1863-1865-35-Stars-Flag.png', 
+                      iconWidth= 20, iconHeight=15
+)
+
+# Links to web pages about the battles 
+sites <- c("<a href='https://en.wikipedia.org/wiki/Battle_of_Fort_Sumter'>
+               Battle of Fort Sumter (April 12-13, 1861)</a>",
+           "<a href='https://en.wikipedia.org/wiki/First_Battle_of_Bull_Run'>
+               First Battle of Bull Run (July 21, 1861)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Wilson%27s_Creek'>
+               Battle of Wilson's Creek (August 10, 1861)</a>",
+           "<a href='https://en.wikipedia.org/wiki/First_Battle_of_Winchester'>
+               First Battle of Winchester (May 25, 1862)</a>", 
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Gaines%27_Mill'>
+               Battle of Gaines' Mill (June 27, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Second_Battle_of_Bull_Run'>
+               Second Battle of Bull Run (August 28-30, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Fredericksburg'>
+               Battle of Fredericksburg (December 11-15, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Chancellorsville'>
+               Battle of Chancellorsville (April 30-May 6, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Chickamauga'>
+               Battle of Chickamauga (September 18-20, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Mansfield'>
+               Battle of Mansfield (April 8, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Cold_Harbor'>
+               Battle of Cold Harbor (May 31-June 12, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_the_Crater'>
+               Battle of the Crater (July 30, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Fort_Donelson'>
+                Battle of Fort Donelson (February 11-16, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Island_Number_Ten'>
+                Battle of Island Number Ten (February 28-April 8, 1962)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Pea_Ridge'>
+                Battle of Pea Ridge (March 7-8, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Glorieta_Pass'>
+                Battle of Glorieta Pass (March 26-28, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Shiloh'>
+                Battle of Shiloh (April 6-7, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Forts_Jackson_and_St._Philip'>
+                Battle of Forts Jackson and St. Philip (April 18-28, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Siege_of_Corinth'>
+                Siege of Corinth (April 29-May 30, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Malvern_Hill'>
+                Battle of Malvern Hill (July 1, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Antietam'>
+                Battle of Antietam (September 17, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Stones_River'>
+                Battle of Stones River (December 31, 1862)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Champion_Hill'>
+                Battle of Champion Hill (May 16, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Siege_of_Vicksburg'>
+                Siege of Vicksburg (May 18-July 4, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Siege_of_Port_Hudson'>
+                Siege of Port Hudson (May 22-July 9, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Gettysburg'>
+                Battle of Gettysburg (July 1-3, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Lookout_Mountain'>
+                Battle of Lookout Mountain (November 24, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Missionary_Ridge'>
+                Battle of Missionary Ridge (November 25, 1863)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Mobile_Bay'>
+                Battle of Mobile Bay (August 2-23, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Jonesborough'>
+                Battle of Jonesborough (August 31-September 1, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Third_Battle_of_Winchester'>
+                Third Battle of Winchester (September 19, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Cedar_Creek'>
+                Battle of Cedar Creek (October 19, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Westport'>
+                Battle of Westport (October 23, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Franklin'>
+                Battle of Franklin (November 30, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Nashville'>
+                Battle of Nashville (December 15-16, 1864)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Second_Battle_of_Fort_Fisher'>
+                Second Battle of Fort Fisher (January 13-15, 1865)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Bentonville'>
+                Battle of Bentonville (March 19-21, 1865)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Fort_Stedman'>
+                Battle of Fort Stedman (March 25, 1865)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Five_Forks'>
+                Battle of Five Forks (April 1, 1865)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Third_Battle_of_Petersburg'>
+                Third Battle of Petersburg (April 2, 1865)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Appomattox_Court_House'>
+                Battle of Appomattox Court House (April 9, 1865)</a>",
+           "<a href='https://en.wikipedia.org/wiki/Battle_of_Fort_Blakeley'>
+                Battle of Fort Blakeley (April 2-9, 1865)</a>"
+        )
+
+# Location of battles 
+latLong <- data.frame(lat = c(32.7522, 38.815, 37.1, 39.1773, 37.579,
+                              38.8125, 38.2995, 38.3105, 34.9175, 32.0121,
+                              37.58333334, 37.21833,
+                              36.49305556, 36.7744, 36.4544, 35.57167, 
+                              35.138611, 29.3575, 34.934, 37.4125, 
+                              39.4733, 35.8684722, 32.33, 32.343611, 
+                              30.69388889, 39.81138889, 35.017, 35.030, 
+                              30.2410, 33.5307, 39.1956, 39.0208, 39.03, 
+                              35.9174, 36.0881, 33.9715, 35.30638889,
+                              37.226, 37.13944, 37.1776, 37.3775, 
+                              30.74240833),
+                      long = c(-79.87472, -77.5225, -93.4075, -78.1744, -77.2872,
+                               -77.52138889, -77.4705, -77.6484, -85.26055556,
+                               -93.6652, -77.28333336, -77.37777778,
+                               -87.85611,-89.78555556,-94.034722,-105.755, 
+                               -88.3422, -89.46, -88.522, -77.25, -77.744722, 
+                               -86.43055556, -90.52777778, -90.8511, -91.27638889,
+                               -77.22583333, -85.342, -85.257, -88.0530,
+                               -84.3621, -78.1325, -78.3038, -94.5944, 
+                               -86.8733, -86.8098, -77.9180, -78.32388889, 
+                               -77.371, -77.62277778, -77.4774, -78.79611, 
+                               -87.92703889)
+                          )  
+
+# Flag images for each battle site 
+icon_list <- iconList(confIcon, confIcon, confIcon, confIcon, confIcon, confIcon, 
+                      confIcon, confIcon, confIcon, confIcon, confIcon, confIcon,
+                      unionIcon, unionIcon, unionIcon, unionIcon, unionIcon, unionIcon,
+                      unionIcon, unionIcon, unionIcon, unionIcon, unionIcon, unionIcon,
+                      unionIcon, unionIcon, unionIcon, unionIcon, unionIcon, unionIcon,
+                      unionIcon, unionIcon)
+
+# Create map, add battle sites, legend 
+latLong %>% 
+        leaflet() %>%
+        addTiles() %>%
+        setView(lng=-85.5, lat=35.5, zoom=4) %>%
+        addMarkers(icon=icon_list, popup=sites) %>%
+        addLegendImage(images = c('https://museumofaviation.wordpress.com/wp-content/uploads/2010/09/flag_1865.jpg', 
+                                  'https://images.fineartamerica.com/images-medium-large-5/civil-war-american-flag-1865-padre-art.jpg'),
+                 labels = c('Confederate', 'Union'), width = 20, height = 20,
+                 orientation = 'horizontal',
+                 title = htmltools::tags$div('Victor',
+                                             style = 'font-size: 24px; text-align: center;'),
+                 position = 'topright')
+
+```
