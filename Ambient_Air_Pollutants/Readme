@@ -1,3 +1,6 @@
-This is an exploratory analysis of fine particulate pollutant data collected by the US Environmental Protection Agency (EPA). The focus of this analysis was emission of these pollutants in the US, including the cities of Baltimore, MD and Los Angeles, CA. The primary method of analysis was plots of these emissions over time. 
+This is an exploratory analysis of fine particulate pollutant data collected by the US Environmental Protection Agency (EPA). 
+The focus of this analysis was emission of these pollutants in the US, including the cities of Baltimore, MD and Los Angeles, CA. 
+The primary method of analysis was plots of these emissions over time. 
 
-The presentation of this analysis is done using R markdown with embedded R code using the 'dplyr' and 'ggplot2' packages. The data for this project can be downloaded from this site: 
+The presentation of this analysis is done using R markdown with embedded R code using the 'dplyr' and 'ggplot2' packages. 
+The data for this project can be downloaded from this site: https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip . 
