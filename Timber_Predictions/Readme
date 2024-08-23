@@ -3,4 +3,4 @@ The online prediction application (https://mhthom2.shinyapps.io/FinalProject/) a
 and outputs the predicted volume of timber in cubic feet. It also includes a 3D display of the training data and the prediction. 
 The project also includes a presentation with embedded R code that includes a 3D display of the training data. 
 
-The project was completed in R using the 'plotly' and 'shiny' packages. 
+The project was completed in R using the 'plotly' and 'shiny' packages. The linear model was created using the R 'trees' data set.  
