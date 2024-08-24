@@ -1,0 +1,251 @@
+---
+title: "Impact of Severe Weather on US Public Health and Economy Between 1950 and 2011"
+output:
+  html_document:
+    df_print: paged
+date: "2024-05-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# https://rpubs.com/mhthom2/Project2
+```
+
+## Synopsis
+
+Storms and other severe weather events are increasingly causing both public health and economic problems for communities and municipalities. Using the U.S. National Oceanic and Atmospheric Administration's storm database, which tracks characteristics of major storms and weather events in the United States, we analyzed the public health and economic impacts of severe weather  from 1950 and to the end in November 2011. We calculated the public health impacts in two ways: the total number of fatalities and injuries for a given type of weather event and the fatality rate of a weather event, which is the ratio of the number of fatalities for the event and the total number of fatalities and injuries. From these data, we found that tornadoes by far caused the most fatalities and injuries, but that the cold and wind chill had the highest fatality rate. For economic impacts, we measured the total property and crop damages of a weather event. Tornadoes again had by far the highest impact. 
+
+## Data Processing
+
+For this analysis, we used the following additional R libraries.
+
+```{r}
+suppressMessages({
+        suppressWarnings(
+        {
+                library(dplyr)          # easier data frame manipulation
+                library(stringr)        # string manipulation
+                library(ggplot2)        # plotting charts 
+                library(reshape2)      # for data frame manipulation tools 
+        })
+})
+```
+
+The data for this analysis were provided in the form of a comma-separated-value file compressed via the bzip2 algorithm. After extracting the file, we loaded the data into a variable called `data`. 
+
+```{r cache=TRUE}
+data <- read.csv('repdata_data_StormData.csv')
+head(data)
+```
+
+### Loading Health Data
+
+For the health data, we pulled out the `EVTYPE` (Event Type), `FATALITIES` and `INJURIES` columns from the data set. To remove inconsistencies in the naming conventions used for the events, we also converted all events to title case. 
+
+```{r}
+health_data <- data[c("EVTYPE", "FATALITIES", "INJURIES")]
+health_data$EVTYPE <- str_to_title(health_data$EVTYPE)
+
+# Display first few rows 
+head(health_data)
+```
+
+### Loading Economic Data
+
+For the economic data, we pulled out the `EVTYPE` column again, as well as the `PROPDMG` (Property Damage) and `CROPDMG` (Crop Damage) columns. We also converted the event types to title case. 
+
+```{r}
+econ_data <- data[c("EVTYPE","PROPDMG", "CROPDMG")]
+econ_data$EVTYPE <- str_to_title(econ_data$EVTYPE)
+
+# Display first few rows 
+head(econ_data)
+```
+
+## Results 
+
+### Analysis of Public Health Impacts
+
+For public health impacts, we took the initial data and grouped it by the event types and added column for the total number of fatalities and injuries. Then we added the fatality rate column. This value was calculated by dividing the total number of fatalities for each event and dividing by the total of the number of fatalities and injuries. Because there are a number of event types without any fatalities or injuries, this calculation produced a number of `NA` values. We removed these entries from the analysis. 
+
+```{r}
+# Group data by weather events 
+event_health_data <- health_data %>% group_by(EVTYPE) %>% 
+                         summarize(Injuries = sum(INJURIES), 
+                                   Fatalities = sum(FATALITIES),
+                                   Total = sum(INJURIES) + sum(FATALITIES))
+# Calculate fatality rates 
+event_health_data$Fatality_Rate = event_health_data$Fatalities / 
+                                                      event_health_data$Total
+# Remove N/A, fatality rates caused by zero division 
+event_health_data <- event_health_data[complete.cases(event_health_data), ]
+
+# Display the first few rows 
+head(event_health_data)
+```
+
+The first public health impact we analyzed was the severe weather events with most total fatalities and injuries. Because we wanted to use visualization techniques in the analysis, we selected just the `EVETYPE` (Event Type), `Fatalities`, and `Injuries` columns from the health data. We then sorted the entries by the number of fatalities in ascending order and selected the first ten of them.  
+
+```{r}
+# Get top 10 weather events with most fatalities / injuries 
+top_10_health_data <- event_health_data[c('EVTYPE', 'Injuries', 'Fatalities')]
+top_10_health_data <- top_10_health_data[order(-top_10_health_data$Fatalities),
+                                                                       ][1:10,]
+head(top_10_health_data)
+```
+
+In order to visualize the total impact of the weather events with a stacked bar chart, we converted the table to long form by adding a health outcome column. And to improve readability of the plot, we also changed the column names to more appropriate titles.  
+
+```{r}
+# Convert table to long form to make plotting possible 
+long_top_10_health_data <- melt(top_10_health_data, id='EVTYPE')
+# Rename columns to meaningful labels 
+colnames(long_top_10_health_data) <- c("Event", "Health_Outcome", "Count")
+
+head(long_top_10_health_data)
+```
+
+To improve the readability of the plot, we adjusted the overall size of the figure  and added appropriate labels and titles.  
+
+```{r}
+# Adjust plot size
+options(repr.plot.width = 10, repr.plot.height = 10) 
+
+# Plot bar chart 
+p <- ggplot(long_top_10_health_data, 
+       aes(x = Event, y = Count, fill = Health_Outcome)) + 
+        geom_bar(stat = 'identity') +
+        labs(x="Weather Event", 
+             y="Totals",
+             fill='',
+             title="Ten Weather Events with Most Fatalities and Injuries") +
+        scale_x_discrete(guide = guide_axis(angle = 20)) +
+        scale_fill_manual(values=c("deeppink3", 
+                                   "darkorchid3")) 
+print(p)
+```
+
+Using the total number of fatalities and injuries as the metric of evaluation, tornadoes are the weather event type with greatest total health impact. There are 11.5 times more tornado incidents than the next highest event, excessive heat. And even if we only consider fatalities, tornado incidents caused almost 3 times as many fatalities as the next most common cause, again excessive heat. However, the total number of incidents may not be the best measure of public health impacts. Fatality rates may be more appropriate. 
+
+To evaluate which weather events have the highest fatality rates, we first compared the fatality rates of the events with highest totals. To compare these rates, we again calculated the fatality rates for these events and sorted them in ascending order of these rates. 
+
+```{r}
+# Calculate Fatality Rate for Top 10 
+top_10_health_data$Total <- (top_10_health_data$Fatalities + 
+                                     top_10_health_data$Injuries)
+top_10_health_data$Fatality_Rate <- top_10_health_data$Fatalities / 
+                                        top_10_health_data$Total 
+# Sort by Fatality Rates
+top_10_health_data <- top_10_health_data[order(-top_10_health_data$Fatality_Rate)
+                                                                            , ]
+# Display results
+top_10_health_data
+```
+
+As seen in the table above, the only weather event types with fatality rates above 50% are rip currents and avalanches with fatality rates of 61.3% and 56.9% respectively. Interestingly, the weather event with lowest fatality rate among these events with highest total of incidents were tornadoes. So tornadoes occur most frequently but cause the fewest fatalities as a proportion of the number of incidents. 
+
+But these are only the weather events with highest total occurrences. To expand our analysis, we then widened it to include all of the weather events in the data set. 
+
+Among the highest fatality rates are a number of weather events with a fatality rate of 1.0. In other words, the events that always caused fatalities. To get these data, we selected only weather events with fatality rates of 1.0 and sorted them in ascending order by the total number of fatalities and injuries. 
+
+```{r}
+# Events with fatality rate of 1.0  
+fatality_rate_1_health_data <- event_health_data[event_health_data$Fatality_Rate 
+                                                                      == 1.0, ]
+# Sort by total number of incidents in ascending order
+fatality_rate_1_health_data <- fatality_rate_1_health_data[
+                                    order(-fatality_rate_1_health_data$Total), ]
+# Get first few rows 
+head(fatality_rate_1_health_data)
+```
+
+Although these weather events warrant further exploration, we decided to exclude them in our analysis because they cause so few fatalities. Unseasonably warm and dry weather, which occurred most among those with fatality rates of 1.0, only had 29 incidents in the data set. Since we're looking at the weather events with the greatest impacts, the impact of these events was minimal. 
+
+Next, we examined the weather events with fatality rates greater than 0.5 but less than 1.0. We then sorted the events by these rates in ascending order. 
+
+```{r}
+# Events with fatality rates above 0.5 and below 1.0
+upper_half_fatality_rates <- event_health_data[(event_health_data$Fatality_Rate 
+                          < 1.0) & (event_health_data$Fatality_Rate >= 0.5), ]
+
+# Sort by fatality rate in ascending order  
+upper_half_fatality_rates <- upper_half_fatality_rates[
+        order(-upper_half_fatality_rates$Fatality_Rate), ] 
+```
+
+To further expand our analysis, we also plotted the data for the 10 events with the highest rates. 
+
+```{r}
+# Plot 10 highest fatality rates 
+p <- ggplot(data=upper_half_fatality_rates[1:10, ], 
+            aes(x=EVTYPE, y=Fatality_Rate)) + 
+            geom_bar(stat="identity", fill="deepskyblue3") +
+            labs(x="Weather Event", 
+                 y="Fatality Rates",
+                 title="Ten Weather Events with Highest Fatality Rates") +
+            scale_x_discrete(guide = guide_axis(angle = 20))
+print(p)
+```
+
+In the bar chart, we see that cold and wind chill had the highest fatality rate, which we calculated as 0.89. Second is Hurricane Erin with 0.88. Interestingly, extreme cold and wind chill was third at 0.84. However, in total these weather only accounted for 263 of all of the fatalities and injuries. Despite the high fatality rate of these events, it would be hard to argue with the pubic health impact of tornadoes with 96,979 total fatalities and injuries. 
+
+
+### Analysis of Economic Impacts
+
+To determine which weather event had the greatest economic impact, we first grouped the data by these events and calculated the total damages for each of them. We also sorted them in ascending order by these totals. 
+
+```{r}
+# Group data by weather events 
+event_econ_data <- econ_data %>% group_by(EVTYPE) %>% 
+                   summarize(Property_Damage = sum(PROPDMG), 
+                             Crop_Damage = sum(CROPDMG), 
+                             Total = sum(PROPDMG) + sum(CROPDMG))
+
+# Order by total damages in descending order 
+event_econ_data <- event_econ_data[order(-event_econ_data$Total), ]
+
+# Display the few rows of the data
+head(event_econ_data)
+```
+
+To help visualize the total impact of the most damaging weather events, we selected the ten events with highest totals and scaled the damages to the millions of dollars. Then to plot this data, we converted the table to long form by adding a damage type column and renamed the columns with more appropriate labels. 
+
+```{r}
+# Get top 10 weather events with most economic damages
+top_10_econ_data <- event_econ_data[c('EVTYPE', 'Property_Damage', 
+                                                        'Crop_Damage')][1:10, ]
+# Rescale for plotting 
+top_10_econ_data$Crop_Damage <- top_10_econ_data$Crop_Damage / 1000000
+top_10_econ_data$Property_Damage <- top_10_econ_data$Property_Damage / 1000000
+
+# Convert table to long form to make plotting possible 
+long_top_10_econ_data <- melt(top_10_econ_data, id='EVTYPE')
+
+# Rename columns to meaningful labels 
+colnames(long_top_10_econ_data) <- c("Event", "Damage_Type", "Damages")
+
+# Display the table
+long_top_10_econ_data
+```
+
+Like the public health impacts above, we chose to plot the data using a stacked bar chart. This time we stacked property and crop damages. 
+
+```{r}
+# Adjust plot size
+options(repr.plot.width = 10, repr.plot.height = 10) 
+
+# Plot bar chart 
+p <- ggplot(long_top_10_econ_data, 
+            aes(x = Event, y = Damages, fill = Damage_Type)) + 
+     geom_bar(stat = 'identity') +
+     labs(x="Weather Event", 
+             y="Damages (millions)",
+             fill='',
+             title="Ten Weather Events with Most Economic Impact") +
+      scale_x_discrete(guide = guide_axis(angle = 20)) +
+      scale_fill_manual(values=c("olivedrab3", 
+                                   "sienna3")) 
+print(p)
+```
+
+Although hail is responsible for the most crop damage, tornadoes cause the most damage by far. It's responsible for more than twice as much damage as the next most damaging weather event, flash floods. 
