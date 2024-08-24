@@ -1,0 +1,126 @@
+---
+title: "Automatic vs Manual Transmissions"
+author: "Matthew Thomas"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r echo=FALSE}
+suppressMessages({
+        suppressWarnings(
+        {
+                library(datasets)  
+                library(ggplot2)
+                data(mtcars)
+        })
+})
+
+# To ensure results the same 
+set.seed(10)
+```
+
+### Executive Summary:
+In the past, vehicles with manual transmissions on average were more fuel-efficient than their automatic counterparts. However, as modern automatics have gained additional gears and relied less on a torque converter, the fuel economy gap has been closing. In fact, we analyzed the car data in the `mtcars` data set, and found the fuel economy, as measured by their mile-per-gallon (mpg), of manual-transmission cars now exceeds the mpg of the automatic-transmission cars. 
+
+### Exploratory Analysis:
+
+**Dimensions of data set:**
+```{r echo=FALSE}
+dim(mtcars)
+```
+This car data set has 32 different cars, and 11 columns representing 10 features and a target value. 
+
+**Columns of the data set:**
+```{r echo=FALSE}
+names(mtcars)
+```
+The feature of interest is `am`, which represents the type of transmission in the car. The target values is the `mpg`, miles-per-gallon. 
+
+**Class of features:**
+```{r echo=FALSE}
+sapply(mtcars, class)
+```
+The `mpg` is a continuous, numeric variable, as expected, but the `am` values also numeric. In our analysis, we treated it as a factor variable, so we changed its class.  
+
+**Summary of Transmission data:**
+```{r echo=FALSE}
+# Convert transmission type to factor 
+mtcars$am <- as.factor(mtcars$am)
+summary(mtcars$am)
+
+```
+
+This confirms that the `am` values were converted to factors. The factor `0` indicates that the car has an automatic transmission, and a `1` indicates that it has a manual transmission. 
+
+```{r echo=FALSE, fig.height=3, fig.width=4}
+# Colors of boxes 
+cols <- c('lightblue2','lightpink2')
+
+# Plot data 
+ggplot(mtcars, aes(x=am, y=mpg, fill=am)) +
+        geom_boxplot() +
+        labs(x = "Transmission Type", y = "Miles-Per-Gallon (mpg)",
+             title='Comparison of MPG of\nAutomatic and Manual Transmissions') +
+        scale_fill_manual(labels=c('Automatic', 'Manual'), values=cols) +
+        scale_x_discrete(breaks=c("0","1"),labels=c("Automatic", "Manual")) +
+        theme(legend.position="none")
+```
+
+In this plot, there is a clear distinction between the different types of transmissions. The preliminary analysis indicates that the automatic-transmission cars have better fuel economy than the manual-transmission cars. 
+
+### Analysis: 
+
+To test our hypothesis that the automatic cars in our data set have lower fuel economy than the manual-transmission cars, we created a linear regression model. The `mpg` values were our target, and the `am` values were our regressor. We excluded a y-intercept to make the results easier to interpret. 
+
+**Linear model coefficients:**
+```{r echo=FALSE}
+mdl <- lm(formula = mpg ~ am - 1, data = mtcars)
+summary(mdl)$coef
+```
+
+According to this model, the automatic transmission cars contribute just 17.15 to the mpg while the manual transmission cars contribute 24.39 to the mpg, a significant difference. 
+
+**Confidence intervals for coefficients:** 
+```{r echo=FALSE}
+confint(mdl)
+
+```
+
+Although these coefficient are just estimates, we're 95% sure that the actual contribution to mpg by the automatic-transmission cars lies between 14.9 and 19.4. And for the manual-transmission cars, the range of values is 21.6 to 27.2. Like in the box plot above, there's a clear difference between the values for each type of transmission. 
+
+**R-squared value for model:**
+```{r echo=FALSE}
+summary(mdl)$r.squared
+```
+
+One metric for confirming the efficacy of the model is the $R^2$ value, which represents the proportion of total variation accounted for by the model. In  this case, the model is able to account for 94.9% of the variance in the data. 
+
+
+```{r echo=FALSE, fig.height=3, fig.width=4}
+ggplot(mdl, aes(x = .fitted, y = .resid)) + 
+        geom_point(color='black', fill='pink', shape=21) + 
+        geom_hline(yintercept = 0, color='darkblue', linetype='dashed') +
+        labs(x = "Fitted Values", y = "Residuals",
+             title='Residual Plot of Transmission Model') 
+
+```
+
+The residual plot indicates that the residuals are evenly and randomly distributed around the zero residual line, confirming that linear model is an appropriate method for describing the relationship between car transmissions and mpg. 
+
+**Mean of the residuals:**
+```{r echo=FALSE}
+mean(mdl$residuals)
+```
+
+The zero mean of the residuals also confirms the visual proof in the residual plot, adding to the evidence that this linear model is sound.   
+
+**Test normality of standardized residuals:**
+```{r echo=FALSE}
+shapiro.test(rstandard(mdl))
+```
+
+And finally, we used the Shapiro-Wilk test to check the normalcy of the residuals. The p-value of 0.88 is well above the typical alpha value of 0.05, confirming the null hypothesis that the residuals have a normal distribution, an assumption of our linear model. 
+
+In conclusion, our analysis confirms that the automatic-transmission cars in our data set have lower mpg than the manual-transmission cars. Therefore, the fuel economy of automatic-transmission cars is better than manual-transmission cars.
+
+

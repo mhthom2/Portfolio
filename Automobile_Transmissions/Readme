@@ -1,0 +1,10 @@
+In the past, vehicles with manual transmissions on average were more 
+fuel-efficient than their automatic counterparts. However, as modern 
+automatics have gained additional gears and relied less on a torque converter, 
+the fuel economy gap has been closing. In fact, we analyzed the car data 
+in the R 'mtcars' data set, and found the fuel economy, as measured by 
+their mile-per-gallon (mpg), of manual-transmission cars now exceeds 
+the mpg of the automatic-transmission cars.
+
+This report was created using R markdown with embedded code using the 
+standard and 'ggplot2' packages.  
