@@ -1,28 +1,14 @@
-Using devices like Fitbit, it is now possible to collect lots of data 
-about personal activity. While people regularly use these devices to quantify 
-how much of a particular activity they do, they rarely quantify how well 
-they do it. In this project, I used data from accelerometers on the belt, 
-forearm, and arm of participants to assign a grade on how well they were 
-exercising.
+Using devices like Fitbit, it is now possible to collect lots of data about personal activity. While people regularly use these devices to quantify how much of a particular activity they do, they rarely quantify how well they do it. In this project, I used data from accelerometers on the belt, forearm, and arm of participants to assign a grade on how well they were exercising.
 
-To build this classifier, I first analyzed the collected data, and determined 
-that a large number of the attributes were highly correlated. As a result, I 
-used Principal Component Analaysis (PCA) to combine redundant attributes.
-To determine the best model, I chose to compare the results of three 
-different type of classifiers: k-Nearest Neighbor, Support Vector Machine 
-(SVM), and Random Forest. I used 10-fold cross validation repeated 3 times 
+To build this classifier, I first analyzed the collected data, and determined that a large number of the attributes were highly correlated. As a result, I 
+used Principal Component Analaysis (PCA) to combine redundant attributes. To determine the best model, I chose to compare the results of three 
+different type of classifiers: k-Nearest Neighbor, Support Vector Machine (SVM), and Random Forest. I used 10-fold cross validation repeated 3 times 
 find the best hyper parameters of the models. 
 
-While the accuracy results were good for the individual models, I achieved 
-even better results by stacking all 3 models in a Random Forest model. My 
-accuracy on the test data was 97.4% with a 95% confidence interval of 
-97.0% to 97.8%. 
+While the accuracy results were good for the individual models, I achieved even better results by stacking all 3 models in a Random Forest model. My accuracy on the test data was 97.4% with a 95% confidence interval of 97.0% to 97.8%. 
 
-The data preparation and model creation was done in R using the 'dplyr', 
-'ggplot2', 'tidyverse', and 'caret' packages. The training and test 
-data can be downloaded from these urls: 
+The data preparation and model creation was done in R using the 'dplyr', 'ggplot2', 'tidyverse', and 'caret' packages. The training and test data can be downloaded from these urls: 
 
 https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
-
 https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
 
