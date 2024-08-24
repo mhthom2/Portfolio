@@ -7,7 +7,7 @@ find the best hyper parameters of the models.
 
 While the accuracy results were good for the individual models, I achieved even better results by stacking all 3 models in a Random Forest model. My accuracy on the test data was 97.4% with a 95% confidence interval of 97.0% to 97.8%. 
 
-The data preparation and model creation was done in R using the 'dplyr', 'ggplot2', 'tidyverse', and 'caret' packages. The training and test data can be downloaded from these urls: 
+The report was created using R markdown with embedded R code. The data preparation and model creation was done using the 'dplyr', 'ggplot2', 'tidyverse', and 'caret' packages. The training and test data can be downloaded from these urls: 
 
 https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
 https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
