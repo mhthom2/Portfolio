@@ -1,13 +1,6 @@
-For this project, I analyzed how the dosage and delivery method of vitamin C
-impacted the growth of guinea pig odontoblasts, cells responsible for tooth
-growth. Each animal received one of three dose levels of 
-vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, orange juice 
-or ascorbic acid, a form of vitamin C. Using hypothesis testing, I determined 
-that the 2 mg/day dosage increased tooth growth the most, and that the 
-type of supplement didn't impact the results. 
+For this project, I analyzed how the dosage and delivery method of vitamin C impacted the growth of guinea pig odontoblasts, cells responsible for tooth growth. Each animal received one of three dose levels of vitamin C (0.5, 1, and 2 mg/day) by one of two delivery methods, orange juiceor ascorbic acid, a form of vitamin C. Using hypothesis testing, I determined that the 2 mg/day dosage increased tooth growth the most, and that the type of supplement didn't impact the results. 
 
-The report was completed using R markdown with embedded code using the 'dplyr'
-and 'ggplot2' packages. 
+The report was completed using R markdown with embedded code using the 'dplyr' and 'ggplot2' packages. 
 
 The analysis was done on the R 'tooth' data set. 
 
