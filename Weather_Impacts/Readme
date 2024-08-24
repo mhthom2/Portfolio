@@ -1,14 +1,6 @@
-Using the U.S. National Oceanic and Atmospheric Administration’s storm 
-database, which tracks characteristics of major storms and weather events 
-in the United States, I analyzed the public health and economic impacts 
-of severe weather from 1950 and to the end in November 2011. From these data, 
-I found that tornadoes by far caused the most fatalities and injuries, but 
-that the cold and wind chill had the highest fatality rate. 
-For economic impacts, I measured the total property and crop damages of 
-a weather event. Tornadoes again had by far the highest impact. 
+Using the U.S. National Oceanic and Atmospheric Administration’s storm database, which tracks characteristics of major storms and weather events in the United States, I analyzed the public health and economic impacts of severe weather from 1950 and to the end in November 2011. From these data, I found that tornadoes by far caused the most fatalities and injuries, but that the cold and wind chill had the highest fatality rate. For economic impacts, I measured the total property and crop damages of a weather event. Tornadoes again had by far the highest impact. 
 
-The report was completed in R markdown with embedded code using the 'dplyr',
-'ggplot2', 'stringr', and 'reshape2' packages. 
+The report was completed in R markdown with embedded code using the 'dplyr', 'ggplot2', 'stringr', and 'reshape2' packages. 
 
 The data can be downloaded from this url: 
 
