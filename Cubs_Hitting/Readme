@@ -1,0 +1,20 @@
+The Chicago Cubs are a Major League Baseball (MLB) team. 
+Because the Cubs play about 44% of their games during the day, 
+an analyst might expect their players to perform well during the day. 
+And according to my exploratory analysis of the 2023 season (see PDF), 
+using the team's batting average, on-base percentage plus slugging percentage, 
+and just slugging percentage, the team seemed to perform worse during the day. 
+However, using hypothesis testing (see Jupyter notebook), 
+the batting averages for the daytime were greater than or equal to 
+the averages at night. 
+
+This analysis was done in Python using the pandas, numpy, scipy, and 
+seaborn libraries. 
+
+The data was compiled on the Stathead web site and is available at these 
+urls: 
+
+Day games: https://stathead.com/tiny/6NtCP 
+Night games: https://stathead.com/tiny/QolvV
+
+
