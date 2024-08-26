@@ -1,0 +1,11 @@
+For this project, I was given a data set consisting of 21,693 banking 
+transactions, and I was tasked with creating a classifier that could 
+detect which new transactions are fraudulent. Each transaction included 
+22 unlabeled attributes, an amount, and a class. From the data, 
+I was able to create SVM and Logistic Regression classifiers, but the 
+results were mixed. 
+
+The classifiers were created in Python using the pandas, seaborn, matplotlib,
+and sklearn. 
+
+The data set isn't available for download, but I can share it upon request. 
