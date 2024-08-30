@@ -1,13 +1,7 @@
-For this project, I used the 'nltk' library to explore 
-the CMU Movie Summary Corpus. 
-All data is released under a Creative Commons Attribution-ShareAlike License. 
+For this project, I used the 'nltk' library to explore the CMU Movie Summary Corpus. All data is released under a Creative Commons Attribution-ShareAlike License. 
 
-I also created three spelling recommenders that uses the 'nltk' library 
-to find words similar to the misspelling. Two of the recommenders used 
-the Jaccard Similarity index and n-grams to correct the misspelled words. 
-The edit distance metric with transposition was used in the other recommender. 
+I also created three spelling recommenders that uses the 'nltk' library to find words similar to the misspelling. Two of the recommenders used the Jaccard Similarity index and n-grams to correct the misspelled words. The edit distance metric with transposition was used in the other recommender. 
 
-In addition to the 'nltk' library, the project uses the 'pandas', 'numpy', 
-and 'collections' libraries. 
+In addition to the 'nltk' library, the project uses the 'pandas', 'numpy', and 'collections' libraries. 
 
-The data can be downloaded at this link: https://www.cs.cmu.edu/~ark/personas/
+The data can be downloaded at this link: https://www.cs.cmu.edu/~ark/personas/. 
