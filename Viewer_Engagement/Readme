@@ -1,13 +1,9 @@
-One critical property of a successful video is engagement: 
-how interesting it is for viewers. Engagement is critical for learning. 
-For this project, I created classifiers that predict how engaging an 
-educational video is likely to be for viewers. 
+One critical property of a successful video is engagement: how interesting it is for viewers. Engagement is critical for learning. 
+For this project, I created classifiers that predict how engaging an educational video is likely to be for viewers. 
 
-I created classifiers using Logistic Regression, k-Nearest Neighbors, 
-Support Vector Machine, Decision Tree, and Random Forest models. Using 
-F-1 scoring because of the class imbalance of the data, I found that the 
-tree-based models performed best. 
+I created classifiers using Logistic Regression, k-Nearest Neighbors, Support Vector Machine, Decision Tree, and Random Forest models. Using F-1 scoring because of the class imbalance of the data, I found that the tree-based models performed best. 
 
-For this Python project, I used the 'pandas', 'numpy', 'matplotlib', and 
-'sklearn' libraries. 
+For this Python project, I used the 'pandas', 'numpy', 'matplotlib', and 'sklearn' libraries.
+
+The data for this project can be downloaded from this GitHub site: https://github.com/sahanbull/VLE-Dataset. 
 
