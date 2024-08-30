@@ -1,10 +1,5 @@
-'networkx' is a Python library used for the creation, manipulation, and 
-analysis of complex networks. I used this library look at two different types
-of networks: the email network of a mid-sized company and a network of 
-political blog sites. 
+'networkx' is a Python library used for the creation, manipulation, and analysis of complex networks. I used this library look at two different types of networks: the email network of a mid-sized company and a network of political blog sites. 
 
-In addition to the 'networkx' library, I used the 'pandas' and 'operator' 
-libraries for this project. 
+In addition to the 'networkx' library, I used the 'pandas' and 'operator' libraries for this project. 
 
-The data for this project isn't available for download, but I can supply it
-upon request. 
+The data for this project isn't available for download, but I can supply it upon request. 
