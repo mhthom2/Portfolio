@@ -1,3 +1,7 @@
+# This script loads and prepares the activity data set, 
+# and finds the means of the mean and standard deviation 
+# of each feature.
+
 ###########################################
 # 1. Merge the training and the test sets.
 ###########################################
