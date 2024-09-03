@@ -8,7 +8,7 @@ This repository contains projects that I finished while completing the Johns Hop
 
 [Civil_War_Map](https://github.com/mhthom2/Portfolio/tree/main/Civil_War_Map)
 
-[Exercise_Classifier]()
+[Exercise_Classifier](https://github.com/mhthom2/Portfolio/tree/main/Exercise_Classifier)
 
 [Timber_Predictions]()
 
