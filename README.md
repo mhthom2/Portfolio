@@ -12,7 +12,7 @@ This repository contains projects that I finished while completing the Johns Hop
 
 [Timber_Predictions](https://github.com/mhthom2/Portfolio/tree/main/Timber_Predictions)
 
-[Tooth_Classifier]()
+[Tooth_Classifier](https://github.com/mhthom2/Portfolio/tree/main/Tooth_Classifier)
 
 [Weather_Impacts]()
 
