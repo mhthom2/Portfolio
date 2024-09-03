@@ -21,7 +21,7 @@ Weather_Impacts
 * Used cross validation to fine tune hyper-parameters
 * Evaluated models according to accuracy, precision, recall
 
-[Network_Analysis]()
+[Network_Analysis](https://github.com/mhthom2/Portfolio/tree/main/Network_Analysis)
 * Used 'networkx' library to analyzed networks
 * Studied the connectedness of an email network
 * Rated the sites in a blog network  
