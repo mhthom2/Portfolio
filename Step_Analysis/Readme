@@ -1,7 +1,0 @@
-For this project I analyzed data collected from a personal activity monitoring device, like a Fitbit. The device collected the number of steps taken by an anonymous individual in 5 minute intervals each day over two months.
-
-I used R markdown with embedded code using the 'dplyr', 'ggplot2', and 'cowplot' to complete the exploratory analysis.
-
-The data can be downloaded from this url:
-
-https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip 
