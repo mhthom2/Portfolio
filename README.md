@@ -2,13 +2,19 @@
 This repository contains projects that I finished while completing the Johns Hopkins Data Science certification, which includes ten courses using R, and the University of Michigan Applied Data Science certification, which consists of five courses using Jupyter notebooks. 
 
 ## R Programming Projects: 
-Ambient_Air_Pollutants
-Automobile_Transmissions
-Civil_War_Map
-Exercise_Classifier
-Timber_Predictions
-Tooth_Classifier
-Weather_Impacts
+[Ambient_Air_Pollutants]()
+
+[Automobile_Transmissions]()
+
+[Civil_War_Map]()
+
+[Exercise_Classifier]()
+
+[Timber_Predictions]()
+
+[Tooth_Classifier]()
+
+[Weather_Impacts]()
 
 ## Python Programming with Jupyter Notebooks Projects:
 [Cubs_Hitting](https://github.com/mhthom2/Portfolio/tree/main/Cubs_Hitting)
