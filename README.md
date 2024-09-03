@@ -2,7 +2,7 @@
 This repository contains projects that I finished while completing the Johns Hopkins Data Science certification, which includes ten courses using R, and the University of Michigan Applied Data Science certification, which consists of five courses using Jupyter notebooks. 
 
 ## R Programming Projects: 
-[Ambient_Air_Pollutants]()
+[Ambient_Air_Pollutants](https://github.com/mhthom2/Portfolio/tree/main/Ambient_Air_Pollutants)
 
 [Automobile_Transmissions]()
 
