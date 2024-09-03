@@ -13,21 +13,25 @@ Weather_Impacts
 ## Python Programming with Jupyter Notebooks Projects:
 Cubs_Hitting
 * Analyzed Chicago Cubs hitting during day vs at night
-* Performed hypothesis testing to compare performance 
+* Performed hypothesis testing to compare performance
+  
 Fraud_Detection
 * Built classifiers to detect fraudulent bank tranactions
 * Created Support Vector Machine and Logistic Regression classifiers
 * Used cross validation to fine tune hyper-parameters
 * Evaluated models according to accuracy, precision, recall
+
 Network_Analysis
 * Used 'networkx' library to analyzed networks
 * Studied the connectedness of an email network
 * Rated the sites in a blog network  
+
 Text_Analysis
 * Performed exploratory analysis on plot summaries
 * Built three spelling recommenders
         - Based two recommenders on Jaccard similarity and n-grams
         - Created third recommender using edit distance of tokens   
+
 Viewer_Engagement
 * Created several machine learning models to classify user engagement with educational videos
 * Performed cross validation to determine best combination of hyper-parameters
