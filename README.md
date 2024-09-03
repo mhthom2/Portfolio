@@ -15,7 +15,7 @@ Weather_Impacts
 * Analyzed Chicago Cubs hitting during day vs at night
 * Performed hypothesis testing to compare performance
   
-[Fraud_Detection]()
+[Fraud_Detection](https://github.com/mhthom2/Portfolio/tree/main/Fraud_Detection)
 * Built classifiers to detect fraudulent bank tranactions
 * Created Support Vector Machine and Logistic Regression classifiers
 * Used cross validation to fine tune hyper-parameters
