@@ -29,8 +29,8 @@ Network_Analysis
 Text_Analysis
 * Performed exploratory analysis on plot summaries
 * Built three spelling recommenders
-        - Based two recommenders on Jaccard similarity and n-grams
-        - Created third recommender using edit distance of tokens   
+    - Based two recommenders on Jaccard similarity and n-grams
+    - Created third recommender using edit distance of tokens   
 
 Viewer_Engagement
 * Created several machine learning models to classify user engagement with educational videos
