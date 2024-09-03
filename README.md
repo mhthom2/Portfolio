@@ -32,7 +32,7 @@ Weather_Impacts
     - Based two recommenders on Jaccard similarity and n-grams
     - Created third recommender using edit distance of tokens   
 
-[Viewer_Engagement]()
+[Viewer_Engagement](https://github.com/mhthom2/Portfolio/tree/main/Viewer_Engagement)
 * Created several machine learning models to classify user engagement with educational videos
 * Performed cross validation to determine best combination of hyper-parameters
 * Used F-1 score to evaluate classifiers 
