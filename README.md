@@ -26,7 +26,7 @@ Weather_Impacts
 * Studied the connectedness of an email network
 * Rated the sites in a blog network  
 
-[Text_Analysis]()
+[Text_Analysis](https://github.com/mhthom2/Portfolio/tree/main/Text_Analysis)
 * Performed exploratory analysis on plot summaries
 * Built three spelling recommenders
     - Based two recommenders on Jaccard similarity and n-grams
