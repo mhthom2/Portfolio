@@ -10,7 +10,7 @@ This repository contains projects that I finished while completing the Johns Hop
 
 [Exercise_Classifier](https://github.com/mhthom2/Portfolio/tree/main/Exercise_Classifier)
 
-[Timber_Predictions]()
+[Timber_Predictions](https://github.com/mhthom2/Portfolio/tree/main/Timber_Predictions)
 
 [Tooth_Classifier]()
 
