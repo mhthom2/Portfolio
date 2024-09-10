@@ -1,0 +1,11 @@
+For this project, the Capstone for my IBM Data Science certification, 
+I took the role of a data scientist working for a new rocket company, Space Y. 
+My job was to determine the price of each future rocket launch for the company. 
+I did this by gathering information about SpaceX and creating dashboards for my team. 
+I also determined if SpaceX would be able to reuse the first stage of their rockets. 
+Instead of using rocket science to determine if the first stage will land successfully, 
+I trained a machine learning model and used web-scraped public information to make 
+predictions about their successful launches. 
+
+This project was completed using Python with the 'pandas', 'numpy', 'matplotlib', 
+'plotly', 'folium', 'sqlite', 'seaborn', and 'sklearn' libraries. 
