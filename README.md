@@ -46,6 +46,11 @@ This repository contains projects that I finished while completing the Johns Hop
 * Studied the connectedness of an email network
 * Rated the sites in a blog network  
 
+[Space_Race](https://github.com/mhthom2/Portfolio/tree/main/Space_Race)
+* Capstone project for IBM certification
+* Demonstrated data cleaning and preparation, webscaping, and visualization techniques
+* Built several machine learning models 
+
 [Text_Analysis](https://github.com/mhthom2/Portfolio/tree/main/Text_Analysis)
 * Performed exploratory analysis on plot summaries
 * Built three spelling recommenders
